@@ -20,9 +20,13 @@ ActiveRecord::Schema.define(:version => 0) do
     t.column :user_type, :string
     t.column :username, :string
     t.column :action, :string
-    t.column :changes, :text
+    t.column :audited_changes, :text
     t.column :version, :integer, :default => 0
     t.column :created_at, :datetime
+    t.column :association_id, :integer
+    t.column :association_type, :string
+    t.column :comment, :string
+    t.column :remote_address, :string
   end
   
   add_index :audits, [:auditable_id, :auditable_type], :name => 'auditable_index'

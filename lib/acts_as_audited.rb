@@ -164,7 +164,7 @@ module CollectiveIdea #:nodoc:
 
       private
 
-        def audited_changes
+        def private_audited_changes
           changed_attributes.except(*non_audited_columns).inject({}) do |changes,(attr, old_value)|
             changes[attr] = [old_value, self[attr]]
             changes
@@ -185,17 +185,17 @@ module CollectiveIdea #:nodoc:
         end
 
         def audit_create
-          write_audit(:action => 'create', :changes => audited_attributes)
+          write_audit(:action => 'create', :audited_changes => audited_attributes)
         end
 
         def audit_update
-          unless (changes = audited_changes).empty?
-            write_audit(:action => 'update', :changes => changes)
+          unless (changes = private_audited_changes).empty?
+            write_audit(:action => 'update', :audited_changes => changes)
           end
         end
 
         def audit_destroy
-          write_audit(:action => 'destroy', :changes => audited_attributes)
+          write_audit(:action => 'destroy', :audited_changes => audited_attributes)
         end
 
         def write_audit(attrs)
