@@ -15,6 +15,7 @@ class Audit < ActiveRecord::Base
   before_create :set_version_number, :set_audit_user
 
   serialize :audited_changes
+  serialize :changes
 
   cattr_accessor :audited_class_names
   self.audited_class_names = Set.new
@@ -66,7 +67,8 @@ class Audit < ActiveRecord::Base
 
   # Returns a hash of the changed attributes with the new values
   def new_attributes
-    (audited_changes || {}).inject({}.with_indifferent_access) do |attrs,(attr,values)|
+    # (audited_changes || {}).inject({}.with_indifferent_access) do |attrs,(attr,values)|
+    (changes || {}).inject({}.with_indifferent_access) do |attrs,(attr,values)|
       attrs[attr] = Array(values).last
       attrs
     end
@@ -74,7 +76,8 @@ class Audit < ActiveRecord::Base
 
   # Returns a hash of the changed attributes with the old values
   def old_attributes
-    (audited_changes || {}).inject({}.with_indifferent_access) do |attrs,(attr,values)|
+    # (audited_changes || {}).inject({}.with_indifferent_access) do |attrs,(attr,values)|
+    (changes || {}).inject({}.with_indifferent_access) do |attrs,(attr,values)|
       attrs[attr] = Array(values).first
       attrs
     end
